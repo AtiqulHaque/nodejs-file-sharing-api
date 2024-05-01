@@ -36,87 +36,138 @@ class FileRepository {
     }
 
 
-    // async getCompanyById(company_id) {
+    async getFileByPrivateKey(private_key) {
 
-    //     try {
-    //         const doc = await this.Company.findById(company_id);
+        try {
+            const file = await this.File.find({"private_key": private_key});
 
-    //         return {
-    //             'status': "success",
-    //             'data': doc
-    //         }
-    //     } catch (e) {
+            if(file.length > 0){
+                return {
+                    'status': "success",
+                    'data': file[0]
+                }
+            }
 
-    //         console.log(e);
+            return {
+                'status': "error",
+                'data': "file not found"
+            }
+            
 
-    //         logger.log('error', e);
+        } catch (e) {
 
-    //         let errorMessages = e;
+            console.log(e);
 
-    //         if (typeof e.errors !== 'undefined') {
-    //             errorMessages = e.errors;
-    //         }
+            logger.log('error', e);
 
-    //         return {
-    //             'status': "error",
-    //             'data': errorMessages
-    //         }
-    //     }
-    // }
+            let errorMessages = e;
 
+            if (typeof e.errors !== 'undefined') {
+                errorMessages = e.errors;
+            }
 
-    // async updateCompany(company_id, params) {
-
-    //     try {
-    //         let docu = await this.Company.findByIdAndUpdate(company_id, params, {
-    //             new: true,
-    //             runValidators: false
-    //         });
-
-    //         return {
-    //             'status': "success",
-    //             'data': docu
-    //         }
-
-    //     } catch (e) {
-
-    //         console.log(e);
-
-    //         logger.log('error', e);
-
-    //         return {
-    //             'status': "error",
-    //             'data': e
-    //         }
-    //     }
-    // }
+            return {
+                'status': "error",
+                'data': errorMessages
+            }
+        }
+    }
 
 
-    // async removeCompanyById(company_id) {
+    async getFileByPubKey(public_key) {
 
-    //     try {
+        try {
+            const file = await this.File.find({"public_key": public_key});
 
-    //         let response = await CompanyModel.find({_id: company_id}).remove();
+            if(file.length > 0){
+                return {
+                    'status': "success",
+                    'data': file[0]
+                }
+            }
 
-    //         return {
-    //             'status': "success",
-    //             'data': response
-    //         }
+            return {
+                'status': "error",
+                'data': "file not found"
+            }
+            
 
-    //     } catch (e) {
+        } catch (e) {
 
-    //         console.log(e);
+            console.log(e);
 
-    //         logger.log('error', e);
+            logger.log('error', e);
 
-    //         return {
-    //             'status': "error",
-    //             'data': e
-    //         }
-    //     }
+            let errorMessages = e;
+
+            if (typeof e.errors !== 'undefined') {
+                errorMessages = e.errors;
+            }
+
+            return {
+                'status': "error",
+                'data': errorMessages
+            }
+        }
+    }
 
 
-    // }
+    async removePrivatKeyById(private_key) {
+
+        try {
+
+            let response = await this.File.find({private_key: private_key}).remove();
+
+            return {
+                'status': "success",
+                'data': response
+            }
+
+        } catch (e) {
+
+            console.log(e);
+
+            logger.log('error', e);
+
+            return {
+                'status': "error",
+                'data': e
+            }
+        }
+
+
+    }
+
+
+    async updateLastExcessTimeByPublicKey(public_key) {
+
+        try {
+
+            //new Date().toISOString()
+            let response = await this.File.updateOne(
+                { public_key: public_key },
+                 { last_excess: new Date().toISOString() }
+                 );
+
+            return {
+                'status': "success",
+                'data': response
+            }
+
+        } catch (e) {
+
+            console.log(e);
+
+            logger.log('error', e);
+
+            return {
+                'status': "error",
+                'data': e
+            }
+        }
+
+
+    }
 }
 
 module.exports = FileRepository;

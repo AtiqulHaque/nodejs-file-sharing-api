@@ -21,20 +21,13 @@ const options = {
 };
 const swaggerSpec = swaggerJsdoc(options);
 
-
 // Routers
-//const CompanyRouter = require("./routers/CompanyRouter");
-const FileUploadRouter = require("./routers/FileUploadRouter");
-//const TasksRouter = require("./routers/tasks")
+const FileProcessRouter = require("./routers/FileProcessRouter");
 const {home} = require("./controllers/WelcomeController");
-
-//const {addFile} = require("./controllers/FileUploadController");
-
 
 // Utils
 const logger = require('../utilities/logger');
 
-// Database connection
 
 // Express
 const app = express();
@@ -53,12 +46,10 @@ app.use(hpp());
 
 // routes
 //app.get("/api/ping", home);
-//app.use("/api", CompanyRouter);
-//app.use("/api", CategoryRouter);
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //app.use("/tasks", TasksRouter);
 
-app.use("/", FileUploadRouter);
+app.use("/", FileProcessRouter);
 // 404 handler
 app.get('*', function (req, res) {
     res.status(404).json({"error": "Not found"})

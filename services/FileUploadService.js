@@ -1,36 +1,41 @@
-const {upload, modifyUploader} = require("./ImageUpload");
-
-const imageUpload = upload.fields([
-    {name: 'svg_image', maxCount: 1},
-    {name: 'svg_image_rec', maxCount: 1},
-    {name: 'svg_image_square', maxCount: 1},
-    {name: 'png_image', maxCount: 1},
-    {name: 'png_image_rec', maxCount: 1},
-    {name: 'png_image_square', maxCount: 1},
-]);
-
-
-
-
+const {upload} = require("./ImageUpload");
+const StorageFactory = require("./storage/StorageFactory");
+const FileRepository = require("../database/repositories/FileRepository");
+const GenerateKeyService = require("./GeneratekeyService");
 class FileUploadService {
-    uploadFile(req){
-        return  new Promise((resolve, reject) => {
-            upload.single('svg_image')(req, {}, function (err) {
-                if (err) {
-                    reject(err);
-                }
-              
-              //  console.log(req.file, req.files);
-                // req.file, req.files...
 
-                resolve(req.file);
-              })
+    constructor(){
+        this.fileStorage = StorageFactory.getStorageObject();
+        this.repository = new FileRepository();
+        this.keyService = new GenerateKeyService();
+    }
 
+    async uploadFile(req){
 
-          });
+        const uploadResponse  =  await this.fileStorage.uploadFile(req);
 
-          
+        if(uploadResponse.status === "success"){
+            const keys = this.keyService.getKeys();
+            const uploadData = uploadResponse.data;
+
+            await this.repository.addFile({
+                private_key : keys.privateKey,
+                public_key : keys.publicKey,
+                file_name : uploadData.filename,
+                file_mimetype : uploadData.mimetype,
+            });
+
+            return {
+                "status" : "succes",
+                "data" : keys
+            }
+        }
+
         
+        return {
+            "status" : "error",
+            "data" : "file not found"
+        }
     }
 }
 

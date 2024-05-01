@@ -12,7 +12,8 @@ const s3 = new aws.S3({
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" || file.mimetype === "image/svg+xml") {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png"
+     || file.mimetype === "image/svg+xml") {
         cb(null, true);
     } else {
         cb(new Error("Invalid file type, only JPEG and PNG and Svg is allowed!"), false);
