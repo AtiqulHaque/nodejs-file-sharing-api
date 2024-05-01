@@ -1,0 +1,24 @@
+{
+  "wordCount" : {
+    "1" : {
+      "maxScore" : 11,
+      "minScore" : 8
+    },
+    "2" : {
+      "maxScore" : 15,
+      "minScore" : 11
+    },
+    "3" : {
+      "maxScore" : 17,
+      "minScore" : 13
+    },
+    "4" : {
+      "maxScore" :18,
+      "minScore" : 17
+    },
+    "5" : {
+      "maxScore" :25,
+      "minScore" : 19
+    }
+  }
+}
