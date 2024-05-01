@@ -26,7 +26,7 @@ class FileUploadService {
             });
 
             return {
-                "status" : "succes",
+                "status" : "success",
                 "data" : keys
             }
         }

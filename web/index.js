@@ -21,6 +21,7 @@ const options = {
 };
 const swaggerSpec = swaggerJsdoc(options);
 
+const rateLimitMiddleware = require("./../middlewares/rateLimiter");
 // Routers
 const FileProcessRouter = require("./routers/FileProcessRouter");
 const {home} = require("./controllers/WelcomeController");
@@ -43,6 +44,8 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(express.json());
 app.use(hpp());
+
+app.use(rateLimitMiddleware);
 
 // routes
 //app.get("/api/ping", home);

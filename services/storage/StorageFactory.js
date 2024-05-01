@@ -1,4 +1,6 @@
 const LocalStorageService = require("./LocalStorageService");
+const app_settings = require("./../../settings/app");
+
 
 const StorageInterface = {
     uploadFile: function () { },
@@ -24,17 +26,17 @@ class StorageFactory{
     static getStorageObject(){
 
         
-        if(process.env.STORAGE === "local" || typeof process.env.storage  === "undefined"){
+        if(app_settings.storage === "local" || typeof app_settings.storage  === "undefined"){
             if(implementsInterface(LocalStorage, StorageInterface)){
                 return LocalStorage;
             }
-        } else if(process.env.STORAGE === "S3"){
+        } else if(app_settings.storage === "S3"){
             if(implementsInterface(LocalStorage, StorageInterface)){
                 return LocalStorage;
             }
         }
 
-        throw "Ivalid Storage"; 
+        throw "Please setup your storage service. Ivalid Storage"; 
     }
     
 }

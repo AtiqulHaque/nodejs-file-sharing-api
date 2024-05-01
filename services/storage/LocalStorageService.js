@@ -1,13 +1,13 @@
 const { diffIndexes } = require("../../database/models/FileModel");
 const {upload, modifyUploader} = require("../ImageUpload");
-
+const app_settings = require("./../../settings/app");
 const fs = require("fs");
 
 const imageUpload = upload.fields([
     {name: 'file', maxCount: 1},
 ]);
 
-const directoryPath = __basedir + "/uploads/";
+const directoryPath = __basedir + "/" + app_settings.upload_folder+ "/";
 
 
 

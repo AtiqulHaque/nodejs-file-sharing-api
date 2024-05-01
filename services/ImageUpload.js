@@ -2,9 +2,10 @@ const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const path = require('path');
-const dir = path.resolve(path.join(__dirname, '../uploads'));
 const logger = require("../utilities/logger");
 const fs = require('fs');
+const app_settings = require("./../settings/app");
+const dir = path.resolve(path.join(__dirname, '../' + app_settings.upload_folder));
 
 const s3 = new aws.S3({
     accessKeyId: process.env.S3_ACCESS_KEY,
