@@ -1,4 +1,4 @@
-# Simple NodeJS Api for split complex keyword
+# Simple NodeJS Api for file sharing app
 
 DEV environment 
 
