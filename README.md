@@ -1,22 +1,12 @@
 # Simple NodeJS Api for file sharing app
 
-DEV environment 
+copy config.env rename it .env
 
-Run => npm install
+run make up command into project root folder
 
-Run => npm start
+`make up`
 
-Production 
+and you are ready to go..
 
-Run => npm install
-
-Run  => npm run prod
-
-
-
-OR
-
-For docker Environment
-
-Run => docker-compose up -d --build 
-
+## if you want to change project  settings 
+follow .env file
