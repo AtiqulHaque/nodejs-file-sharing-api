@@ -168,6 +168,48 @@ class FileRepository {
 
 
     }
+
+
+    async getAllInActiveFiles() {
+
+        try {
+
+            var cutoff = new Date();
+            cutoff.setDate(cutoff.getDate()-5);
+
+            const files = await this.File.find({last_excess: {$lt: cutoff}});
+            
+            if(files.length > 0){
+                return {
+                    'status': "success",
+                    'data': files
+                }
+            }
+
+            return {
+                'status': "error",
+                'data': []
+            }
+            
+
+        } catch (e) {
+
+            console.log(e);
+
+            logger.log('error', e);
+
+            let errorMessages = e;
+
+            if (typeof e.errors !== 'undefined') {
+                errorMessages = e.errors;
+            }
+
+            return {
+                'status': "error",
+                'data': errorMessages
+            }
+        }
+    }
 }
 
 module.exports = FileRepository;

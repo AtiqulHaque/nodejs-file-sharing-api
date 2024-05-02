@@ -3,7 +3,10 @@ module.exports.QUEUE_CONFIGURATIONS = {
         concurrency: 2,
     },
 
-    keyword_lookup: {
+    storage_cleanup: {
+        concurrency: 1,
+    },
+    cleanup: {
         concurrency: 5,
     }
 };

@@ -10,9 +10,9 @@ class FileDeleteService {
         this.repository = new FileRepository();
     }
 
-    async deleteFile(req){
+    async deleteFile(privatekey){
 
-        const {privatekey} = {...req.params}
+       
 
         const fileResponse = await this.repository.getFileByPrivateKey(privatekey);
 

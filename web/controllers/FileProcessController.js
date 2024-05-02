@@ -7,6 +7,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const app = require("../../settings/app");
 
+const CacheHandler = require("../../utilities/CacheHandler");
+
 async function addFile(req, res, next) {
     try {
 
@@ -32,8 +34,8 @@ async function deleteFile(req, res, next) {
     try {
 
         let FileDeleteServiceObj = new FileDeleteService();
-
-        let response = await FileDeleteServiceObj.deleteFile(req);
+        const {privatekey} = {...req.params}
+        let response = await FileDeleteServiceObj.deleteFile(privatekey);
         
         if (response.status === "success") {
             res.json(Response.success(response.data));
@@ -51,7 +53,6 @@ async function deleteFile(req, res, next) {
 async function downloadFile(req, res, next) {
 
     try {
-
         let FileDownloadServiceObj = new FileDownloadService();
         let response = await FileDownloadServiceObj.getFileData(req);
 

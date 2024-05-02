@@ -3,12 +3,12 @@ const {reportError} = require("../../utilities/sentry");
 const logger = require("../../utilities/logger")
 
 const SCHEDULE = {
-    hour: "0",
+    minute: "*",
 };
 
 const task = async () => {
-    logger.info("Queue: keyword_lookup");
-    await postMessageToQueue("keyword_lookup", "init",);
+    logger.info("Queue: storage_cleanup");
+    await postMessageToQueue("storage_cleanup", "init",);
     return "done";
 };
 

@@ -1,5 +1,5 @@
 const Redis = require("ioredis");
-
+const logger = require('../utilities/logger');
 let CONNECTION = null;
 
 module.exports.getRedis = function () {

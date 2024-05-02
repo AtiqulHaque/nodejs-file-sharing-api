@@ -2,7 +2,7 @@ const express = require("express");
 const {
     validationHandler,
     fileDeleteValidators,
-    fileGetValidators
+    fileDownloderValidators
 } = require("../validators/FileDeleteValidators");
 // internal imports
 const {
@@ -17,7 +17,7 @@ router.post("/files", validationHandler, addFile);
 
 router.delete("/files/:privatekey", fileDeleteValidators, validationHandler, deleteFile);
 
-router.get("/files/:publickey", fileGetValidators, validationHandler, downloadFile);
+router.get("/files/:publickey", fileDownloderValidators, validationHandler, downloadFile);
 
 module.exports = router;
 

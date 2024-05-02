@@ -12,11 +12,12 @@ let redisClient;
                 port: process.env.REDIS_PORT
             }
         });
-
+       
         redisClient.on("error", (error) => console.error(`Error : ${error}`));
         await redisClient.connect();
         await redisClient.select(3);
     } catch (error) {
+        console.log(process.env.REDIS_PORT)
         console.log(error);
     }
 

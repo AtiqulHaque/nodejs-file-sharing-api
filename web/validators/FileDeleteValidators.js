@@ -11,7 +11,7 @@ let fileDeleteValidators = [
 ];
 
 
-let fileGetValidators = [
+let fileDownloderValidators = [
     param("publickey", "Public key is required")
         .isLength({min: 35}).withMessage("Minimum character limit is 35")
         .isLength({max : 36}).withMessage("Maximum character limit is 35")
@@ -33,6 +33,6 @@ const validationHandler = function (req, res, next) {
 };
 module.exports = {
     validationHandler,
-    fileGetValidators,
+    fileDownloderValidators,
     fileDeleteValidators
 };
