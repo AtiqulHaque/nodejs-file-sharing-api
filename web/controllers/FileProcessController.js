@@ -1,13 +1,11 @@
 const Response = require("../../utilities/response");
 const logger = require("../../utilities/logger");
-const dotenv = require("dotenv");
-const Token = require("../../utilities/base62Encoder");
-const GenerateKeyService = require("../../services/GeneratekeyService");
 const FileUploadService = require("../../services/FileUploadService");
 const FileDownloadService = require("../../services/FileDownloadService");
-const FileRepository = require("../../database/repositories/FileRepository");
 const FileDeleteService = require("../../services/FileDeleteService");
-const StorageFactory = require("../../services/storage/StorageFactory");
+const dotenv = require("dotenv");
+dotenv.config();
+const app = require("../../settings/app");
 
 async function addFile(req, res, next) {
     try {
@@ -36,7 +34,7 @@ async function deleteFile(req, res, next) {
         let FileDeleteServiceObj = new FileDeleteService();
 
         let response = await FileDeleteServiceObj.deleteFile(req);
-
+        
         if (response.status === "success") {
             res.json(Response.success(response.data));
         } else {
@@ -50,16 +48,22 @@ async function deleteFile(req, res, next) {
 
 
 
-
 async function downloadFile(req, res, next) {
 
     try {
 
         let FileDownloadServiceObj = new FileDownloadService();
-        let response = await FileDownloadServiceObj.getFileData(req, res, next);
+        let response = await FileDownloadServiceObj.getFileData(req);
 
         if (response.status === "success") {
-            res.download(response.data)
+            if(app.storage === "local"){
+                res.download(response.data);
+            } else if(app.storage === "S3"){
+                res.attachment(response.data.file_name);
+                response.data.s3
+                .getObject(response.data.options)
+                .createReadStream().pipe(res);
+            }
         } else {
             res.json(Response.errorWithMessage(response.data), 500);
         }

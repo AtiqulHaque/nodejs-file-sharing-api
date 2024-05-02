@@ -1,5 +1,5 @@
 const { diffIndexes } = require("../../database/models/FileModel");
-const {upload, modifyUploader} = require("../ImageUpload");
+const {upload} = require("../ImageUpload");
 const app_settings = require("./../../settings/app");
 const fs = require("fs");
 
@@ -44,11 +44,7 @@ class LocalStorageService {
      }
 
     deleteFile(filePath){
-
-       
-        
         try {
-            
             fs.unlinkSync(directoryPath + filePath);
 
             return {

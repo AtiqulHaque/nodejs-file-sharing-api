@@ -1,12 +1,6 @@
-const {upload, modifyUploader} = require("./ImageUpload");
+
 const StorageFactory = require("../services/storage/StorageFactory");
-const imageUpload = upload.fields([
-    {name: 'file', maxCount: 1}
-]);
-
 const FileRepository = require("./../database/repositories/FileRepository");
-
-
 
 
 class FileDeleteService {

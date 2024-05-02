@@ -1,4 +1,3 @@
-const {upload} = require("./ImageUpload");
 const StorageFactory = require("./storage/StorageFactory");
 const FileRepository = require("../database/repositories/FileRepository");
 const GenerateKeyService = require("./GeneratekeyService");

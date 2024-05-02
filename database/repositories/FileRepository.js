@@ -78,7 +78,7 @@ class FileRepository {
 
         try {
             const file = await this.File.find({"public_key": public_key});
-
+            
             if(file.length > 0){
                 return {
                     'status': "success",

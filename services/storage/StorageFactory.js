@@ -1,5 +1,6 @@
 const LocalStorageService = require("./LocalStorageService");
 const app_settings = require("./../../settings/app");
+const S3StorageService = require("./S3StorageService");
 
 
 const StorageInterface = {
@@ -21,18 +22,18 @@ function implementsInterface(obj, interfaceObj) {
 
 
 const LocalStorage = new LocalStorageService();
+const s3Storage = new S3StorageService();
 
 class StorageFactory{
     static getStorageObject(){
 
-        
         if(app_settings.storage === "local" || typeof app_settings.storage  === "undefined"){
             if(implementsInterface(LocalStorage, StorageInterface)){
                 return LocalStorage;
             }
         } else if(app_settings.storage === "S3"){
             if(implementsInterface(LocalStorage, StorageInterface)){
-                return LocalStorage;
+                return s3Storage;
             }
         }
 
