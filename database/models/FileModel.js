@@ -16,13 +16,13 @@ const file = path.resolve(path.join(__basedir, '/' + DB.host + '/' + DB.name));
     }
 
     if (!fs.existsSync(file)) {
-        fs.writeFile(file, '[]', (err) => {
-            if (err) {
-                console.error(err);
-            } else {
-                // file written successfully
-            }
-        });
+        let content = '[]';
+        try {
+            fs.writeFileSync(file, content);
+            // file written successfully
+        } catch (err) {
+            console.error(err);
+        }
     }
 })();
 
