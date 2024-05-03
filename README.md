@@ -125,6 +125,6 @@ npm run test
 
 ## API Specification
 
-This section outlines the endpoints and usage of the File Sharing API.
+<img src="./api-docs.png">
 
 ---
