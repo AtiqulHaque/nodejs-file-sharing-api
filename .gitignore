@@ -112,4 +112,4 @@ pgdata/
 
 uploads/
 
-db/*
+/db/*.json
