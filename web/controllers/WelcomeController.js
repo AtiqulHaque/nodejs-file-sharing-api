@@ -1,8 +1,11 @@
-const Response = require("../../utilities/response");
-
-function home(req, res, next) {
+/**
+ * @param {any} req
+ * @param {any} res
+ * @param {any} next
+ */
+async function home(req, res, next) {
     try {
-        res.json("Pong");
+        res.json('Pong');
     } catch (err) {
         next(err);
     }

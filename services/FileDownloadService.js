@@ -1,53 +1,38 @@
-const StorageFactory = require("./storage/StorageFactory");
-const FileRepository = require("../database/repositories/FileRepository");
-const CacheHandler = require("./../utilities/CacheHandler");
+const StorageFactory = require('./storage/StorageFactory');
+const FileRepository = require('../database/repositories/FileRepository');
 
 class FileDownloadService {
-
-    constructor(){
+    constructor() {
         this.fileStorage = StorageFactory.getStorageObject();
         this.repository = new FileRepository();
     }
 
-    async getFileData(req){
+    async getFileData(req) {
+        const { publickey } = { ...req.params };
 
-        const {publickey} = {...req.params}
-        let fileResponse = await CacheHandler.get(publickey);
+        const { status, data } = await this.repository.getFileByPubKey(publickey);
 
-        if(!fileResponse){
-            console.log("Cache miss");
-            const {status, data} = await this.repository.getFileByPubKey(publickey);
-
-            if(status !== "success"){
-                return {
-                    "status" : "error",
-                    "data" : "File not found"
-                }
-            }
-            fileResponse = data;
-            await CacheHandler.set(publickey, JSON.stringify(data), 30);
-        } else {
-            console.log("Cache Hit");
-            fileResponse = JSON.parse(fileResponse);
+        if (status !== 'success') {
+            return {
+                status: 'error',
+                data: 'File not found',
+            };
         }
-
-        if(fileResponse){
+        if (data) {
             await this.repository.updateLastExcessTimeByPublicKey(publickey);
             return {
-                "status" : "success",
-                "data" : {
-                    fileHandler : this.fileStorage.getFile(fileResponse),
-                    file_meta_data : fileResponse
-                }
-            }
+                status: 'success',
+                data: {
+                    fileHandler: this.fileStorage.getFile(data),
+                    file_meta_data: data,
+                },
+            };
         }
 
         return {
-            "status" : "error",
-            "data" : "File not found"
-        }
-
-        
+            status: 'error',
+            data: 'File not found',
+        };
     }
 }
 
