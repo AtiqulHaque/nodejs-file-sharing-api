@@ -1,24 +1,21 @@
-const Response = require("../../utilities/response");
-const logger = require("../../utilities/logger");
+const Response          = require("../../utilities/response");
+const logger            = require("../../utilities/logger");
 const FileUploadService = require("../../services/FileUploadService");
 const FileDownloadService = require("../../services/FileDownloadService");
 const FileDeleteService = require("../../services/FileDeleteService");
 const dotenv = require("dotenv");
 dotenv.config();
-const app = require("../../settings/app");
-
-const CacheHandler = require("../../utilities/CacheHandler");
 
 async function addFile(req, res, next) {
     try {
 
         let FileDeleteServiceObj = new FileUploadService();
-        let response = await FileDeleteServiceObj.uploadFile(req);
+        let {status, data} = await FileDeleteServiceObj.uploadFile(req);
             
-        if (response.status === "success") {
-            res.json(Response.success(response.data));
+        if (status === "success") {
+            res.json(Response.success(data));
         } else {
-            res.json(Response.errorWithMessage(response.data), 500);
+            res.json(Response.errorWithMessage(data), 500);
         }
         
     } catch (error) {
@@ -35,12 +32,12 @@ async function deleteFile(req, res, next) {
 
         let FileDeleteServiceObj = new FileDeleteService();
         const {privatekey} = {...req.params}
-        let response = await FileDeleteServiceObj.deleteFile(privatekey);
+        let {status, data} = await FileDeleteServiceObj.deleteFile(privatekey);
         
-        if (response.status === "success") {
-            res.json(Response.success(response.data));
+        if (status === "success") {
+            res.json(Response.success(data));
         } else {
-            res.json(Response.errorWithMessage(response.data), 500);
+            res.json(Response.errorWithMessage(data), 500);
         }
 
     } catch (error) {
@@ -54,19 +51,16 @@ async function downloadFile(req, res, next) {
 
     try {
         let FileDownloadServiceObj = new FileDownloadService();
-        let response = await FileDownloadServiceObj.getFileData(req);
+        
+        const {status, data } = await FileDownloadServiceObj.getFileData(req);
 
-        if (response.status === "success") {
-            if(app.storage === "local"){
-                res.download(response.data);
-            } else if(app.storage === "S3"){
-                res.attachment(response.data.file_name);
-                response.data.s3
-                .getObject(response.data.options)
-                .createReadStream().pipe(res);
-            }
+        if (typeof status !== "undefined" && status === "success") {
+            const {fileHandler, file_meta_data} = data;
+            res.setHeader('Content-Type', file_meta_data.file_mimetype);
+            res.setHeader('Content-Disposition', `attachment; filename=${file_meta_data.file_name}`);
+            fileHandler.pipe(res);
         } else {
-            res.json(Response.errorWithMessage(response.data), 500);
+            res.json(Response.errorWithMessage(data), 500);
         }
 
     } catch (error) {

@@ -1,15 +1,11 @@
 const FileModel = require('../models/FileModel');
 const logger = require("../../utilities/logger");
+const app_settings = require("../../settings/app");
 
 class FileRepository {
     constructor() {
         this.File = FileModel;
     }
-
-    // async getAllCompanies() {
-    //     return this.Company.find({}).exec()
-    // }
-
     async addFile(param) {
         try {
             let response = await this.File.create(param);
@@ -174,8 +170,8 @@ class FileRepository {
 
         try {
 
-            var cutoff = new Date();
-            cutoff.setDate(cutoff.getDate()-5);
+            let cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - parseInt(app_settings.inactive_duration));
 
             const files = await this.File.find({last_excess: {$lt: cutoff}});
             

@@ -2,11 +2,23 @@ const setRateLimit = require("express-rate-limit");
 const app_settings = require("./../settings/app");
 
 
-const rateLimitMiddleware = setRateLimit({
+const DownloadLimitMiddleware = setRateLimit({
   windowMs: 1440 * 60 * 1000, //24 hour in milisecond
-  max: app_settings.perday_limit,
-  message: "You have exceeded your " +app_settings.perday_limit + " requests per day limit.",
+  max: app_settings.perday_download_limit,
+  message: "You have exceeded your " +app_settings.perday_download_limit + " file download request per day limit.",
   headers: true,
 });
 
-module.exports = rateLimitMiddleware;
+const UploadLimitMiddleware = setRateLimit({
+  windowMs: 1440 * 60 * 1000, //24 hour in milisecond
+  max: app_settings.perday_upload_limit,
+  message: "You have exceeded your " +app_settings.perday_upload_limit + " file upload request per day limit.",
+  headers: true,
+});
+
+
+
+module.exports = {
+  DownloadLimitMiddleware,
+  UploadLimitMiddleware
+};

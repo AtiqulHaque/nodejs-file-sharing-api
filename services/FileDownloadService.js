@@ -1,5 +1,6 @@
 const StorageFactory = require("./storage/StorageFactory");
 const FileRepository = require("../database/repositories/FileRepository");
+const CacheHandler = require("./../utilities/CacheHandler");
 
 class FileDownloadService {
 
@@ -11,14 +12,33 @@ class FileDownloadService {
     async getFileData(req){
 
         const {publickey} = {...req.params}
+        let fileResponse = await CacheHandler.get(publickey);
 
-        const fileResponse = await this.repository.getFileByPubKey(publickey);
-    
-        if(fileResponse.status === "success"){
+        if(!fileResponse){
+            console.log("Cache miss");
+            const {status, data} = await this.repository.getFileByPubKey(publickey);
+
+            if(status !== "success"){
+                return {
+                    "status" : "error",
+                    "data" : "File not found"
+                }
+            }
+            fileResponse = data;
+            await CacheHandler.set(publickey, JSON.stringify(data), 30);
+        } else {
+            console.log("Cache Hit");
+            fileResponse = JSON.parse(fileResponse);
+        }
+
+        if(fileResponse){
             await this.repository.updateLastExcessTimeByPublicKey(publickey);
             return {
                 "status" : "success",
-                "data" : this.fileStorage.getFile(fileResponse.data)
+                "data" : {
+                    fileHandler : this.fileStorage.getFile(fileResponse),
+                    file_meta_data : fileResponse
+                }
             }
         }
 

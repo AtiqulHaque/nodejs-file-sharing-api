@@ -1,7 +1,7 @@
 
 const StorageFactory = require("../services/storage/StorageFactory");
 const FileRepository = require("./../database/repositories/FileRepository");
-
+const CacheHandler = require("./../utilities/CacheHandler");
 
 class FileDeleteService {
 
@@ -12,21 +12,26 @@ class FileDeleteService {
 
     async deleteFile(privatekey){
 
-       
-
-        const fileResponse = await this.repository.getFileByPrivateKey(privatekey);
-
-        if(fileResponse.status === "success"){
+        const {status, data} = await this.repository.getFileByPrivateKey(privatekey);
             
-            const deleteResponse = await this.fileStorage.deleteFile(fileResponse.data.file_name)
+        if(status !== "success"){
+            return {
+                "status" : "error",
+                "data" : "File not found"
+            }
+        }
 
-            if(deleteResponse.status === "success"){
-                await this.repository.removePrivatKeyById(privatekey);
-                
-                return {
-                    "status" : "success",
-                    "data" : "File has been delete successfully"
-                }
+        const deleteResponse  = await this.fileStorage.deleteFile(data.file_name);
+
+        if(deleteResponse.status === "success"){
+            //Remove file data from database
+            await this.repository.removePrivatKeyById(privatekey);
+            //Remove file data from cache
+            await CacheHandler.remove(data.public_key);
+
+            return {
+                "status" : "success",
+                "data" : "File has been delete successfully"
             }
         }
 

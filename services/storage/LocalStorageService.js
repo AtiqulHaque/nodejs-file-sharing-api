@@ -40,7 +40,8 @@ class LocalStorageService {
           });
     }
     getFile(file) {
-        return directoryPath + file.file_name;
+      //  return directoryPath + file.file_name;
+        return fs.createReadStream(directoryPath + file.file_name);
      }
 
     deleteFile(filePath){

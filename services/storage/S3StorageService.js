@@ -6,11 +6,11 @@ const path = require('path');
 
 const dotenv = require('dotenv');
 dotenv.config();
-
+const s3_settings = require("./../../settings/providers/s3");
 
 const s3 = new aws.S3({
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_ACCESS_SECRET,
+    accessKeyId:s3_settings.ACCESS_KEY,
+    secretAccessKey: s3_settings.ACCESS_SECRET
 });
 
 
@@ -19,7 +19,7 @@ const s3Uploader = multer({
     storage: multerS3({
         acl: "public-read",
         s3,
-        bucket: process.env.S3_BUCKET_NAME + "/files",
+        bucket: s3_settings.BUCKET_NAME + "/files",
         contentType: multerS3.AUTO_CONTENT_TYPE,
         key: function (req, file, cb) {
             cb(null, `${Date.now().toString()}_${file.fieldname}${path.extname(file.originalname).toLowerCase()}`);
@@ -82,15 +82,11 @@ class S3StorageService {
     }
     getFile(file) {
         var options = {
-            Bucket    : process.env.S3_BUCKET_NAME + "/files",
+            Bucket    : s3_settings.BUCKET_NAME + "/files",
             Key       : file.file_name,
         };
 
-        return {
-            options,
-            s3,
-            file_name : file.file_name
-        };
+        return s3.getObject(options).createReadStream();
      }
 
     async deleteFile(filePath){
@@ -99,7 +95,7 @@ class S3StorageService {
             
             return new Promise((resolve, reject) => {
                 s3.deleteObject({
-                'Bucket': process.env.S3_BUCKET_NAME + "/files",
+                'Bucket': s3_settings.BUCKET_NAME + "/files",
                 'Key': filePath
                 }, function (err, data) {
                     if (err) {

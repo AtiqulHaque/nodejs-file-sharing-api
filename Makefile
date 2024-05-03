@@ -10,8 +10,8 @@ default: help;
 up: #: Start the development environment services
 	docker compose up --attach upload-service
 
-# test: #: Run tests using jest
-# 	docker compose run --rm logo-service npm run test
+test: #: Run tests using jest
+	docker compose run --rm logo-service npm run test
 
 clean: #: Bring down containers, remove all data
 	docker compose down --remove-orphans --volumes
@@ -25,6 +25,10 @@ shell: #: Enter user-mode shell (same UID:GID as host user)
 
 root-shell: #: Enter root-mode shell (as root user in container)
 	docker compose run --rm -ti upload-service bash
+
+create-index: #: Create db indexes
+	docker-compose exec upload-service bash
+
 
 help: #: Show this help
 	@fgrep -h "#-" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/#-\s//'

@@ -1,4 +1,5 @@
 const express = require("express");
+const rateLimit = require("./../../middlewares/rateLimiter");
 const {
     validationHandler,
     fileDeleteValidators,
@@ -13,11 +14,11 @@ const {
 
 const router = express.Router();
 
-router.post("/files", validationHandler, addFile);
+router.post("/files", rateLimit.UploadLimitMiddleware, validationHandler, addFile);
 
 router.delete("/files/:privatekey", fileDeleteValidators, validationHandler, deleteFile);
 
-router.get("/files/:publickey", fileDownloderValidators, validationHandler, downloadFile);
+router.get("/files/:publickey", rateLimit.DownloadLimitMiddleware,  fileDownloderValidators, validationHandler, downloadFile);
 
 module.exports = router;
 

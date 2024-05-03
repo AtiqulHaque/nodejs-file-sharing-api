@@ -21,7 +21,6 @@ const options = {
 };
 const swaggerSpec = swaggerJsdoc(options);
 
-const rateLimitMiddleware = require("./../middlewares/rateLimiter");
 // Routers
 const FileProcessRouter = require("./routers/FileProcessRouter");
 const {home} = require("./controllers/WelcomeController");
@@ -45,14 +44,14 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(hpp());
 
-app.use(rateLimitMiddleware);
+//app.use(rateLimitMiddleware);
 
 // routes
-//app.get("/api/ping", home);
+app.get("/api/ping", home);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //app.use("/tasks", TasksRouter);
 
-app.use("/", FileProcessRouter);
+app.use("/",FileProcessRouter);
 // 404 handler
 app.get('*', function (req, res) {
     res.status(404).json({"error": "Not found"})
@@ -83,7 +82,7 @@ app.use((err, req, res, next) => {
 });
 
 // start app, handle errors
-app.listen(process.env.PORT, () => {
+app.listen(3000, () => {
     logger.info(`app started`, {port: process.env.PORT});
 });
 
@@ -98,3 +97,5 @@ process.on('unhandledRejection', err => {
         process.exit(1);
     });
 });
+
+module.exports = app;

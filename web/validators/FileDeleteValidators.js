@@ -1,10 +1,10 @@
-const {body,param, validationResult} = require("express-validator");
+const {body, param, validationResult} = require("express-validator");
 
 const Response = require("../../utilities/response");
 let fileDeleteValidators = [
     param("privatekey", "Private key is required")
-        .isLength({min: 35}).withMessage("Minimum character limit is 35")
-        .isLength({max : 36}).withMessage("Maximum character limit is 35")
+        .isLength({min: 32}).withMessage("Minimum character limit is 32")
+        .isLength({max : 33}).withMessage("Maximum character limit is 32")
         .trim()
         .not()
         .isEmpty()
@@ -13,8 +13,8 @@ let fileDeleteValidators = [
 
 let fileDownloderValidators = [
     param("publickey", "Public key is required")
-        .isLength({min: 35}).withMessage("Minimum character limit is 35")
-        .isLength({max : 36}).withMessage("Maximum character limit is 35")
+        .isLength({min: 32}).withMessage("Minimum character limit is 32")
+        .isLength({max : 33}).withMessage("Maximum character limit is 32")
         .trim()
         .not()
         .isEmpty()

@@ -8,7 +8,7 @@ const env = dotenv.parse(fs.readFileSync(envPath, {encoding: "utf8"}));
 module.exports = {
     apps: [
         {
-            name: "logo-service",
+            name: "upload-service",
             script: "./index.js",
             env,
             node_args: "--max_old_space_size=6144",

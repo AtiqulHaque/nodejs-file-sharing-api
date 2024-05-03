@@ -6,7 +6,7 @@ class FileUploadService {
     constructor(){
         this.fileStorage = StorageFactory.getStorageObject();
         this.repository = new FileRepository();
-        this.keyService = new GenerateKeyService();
+        this.keyService = new GenerateKeyService(16);
     }
 
     async uploadFile(req){
@@ -14,19 +14,19 @@ class FileUploadService {
         const uploadResponse  =  await this.fileStorage.uploadFile(req);
 
         if(uploadResponse.status === "success"){
-            const keys = this.keyService.getKeys();
-            const uploadData = uploadResponse.data;
+            const { publicKey, privateKey } = this.keyService.getKeys();
+            const {filename, mimetype} = uploadResponse.data;
 
             await this.repository.addFile({
-                private_key : keys.privateKey,
-                public_key : keys.publicKey,
-                file_name : uploadData.filename,
-                file_mimetype : uploadData.mimetype,
+                private_key : privateKey,
+                public_key : publicKey,
+                file_name : filename,
+                file_mimetype : mimetype,
             });
 
             return {
                 "status" : "success",
-                "data" : keys
+                "data" : {publicKey, privateKey}
             }
         }
 
