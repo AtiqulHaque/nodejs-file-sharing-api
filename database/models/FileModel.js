@@ -1,10 +1,30 @@
 /* module dependencies */
 const fs = require('fs');
 const DB = require('../../settings/db');
-
+const path = require('path');
 const fileHandler = fs.promises;
 
 const dataPath = __basedir + '/' + DB.host + '/' + DB.name;
+
+const dir = path.resolve(path.join(__basedir, '/' + DB.host));
+
+const file = path.resolve(path.join(__basedir, '/' + DB.host + '/' + DB.name));
+
+(() => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+
+    if (!fs.existsSync(file)) {
+        fs.writeFile(file, '[]', (err) => {
+            if (err) {
+                console.error(err);
+            } else {
+                // file written successfully
+            }
+        });
+    }
+})();
 
 class FileModel {
     constructor() {
