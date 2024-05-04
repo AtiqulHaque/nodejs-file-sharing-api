@@ -53,4 +53,15 @@ describe('Restfull File share API Tests', () => {
                 done();
             });
     });
+
+    it('should not unccessfully delete while unknown private key', (done) => {
+        request(baseurl)
+            .delete('/files/' + '12121i12i1y2')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .end(function (err, res) {
+                expect(res.statusCode).to.be.equal(200);
+                done();
+            });
+    });
 });
