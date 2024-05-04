@@ -1,15 +1,15 @@
-const {postMessageToQueue} = require("../../utilities/bullmq");
-const {reportError} = require("../../utilities/sentry");
-const logger = require("../../utilities/logger")
+const { postMessageToQueue } = require('../../utilities/bullmq');
+const { reportError } = require('../../utilities/sentry');
+const logger = require('../../utilities/logger');
 
 const SCHEDULE = {
-    minute: "*",
+    minute: '*',
 };
 
 const task = async () => {
-    logger.info("Queue: ping");
-    await postMessageToQueue("ping", "hello", {name: "logo service"});
-    return "done";
+    logger.info('Queue: ping');
+    await postMessageToQueue('ping', 'hello', { name: 'logo service' });
+    return 'done';
 };
 
 const onError = (err) => {

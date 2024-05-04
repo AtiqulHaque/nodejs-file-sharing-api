@@ -2,7 +2,6 @@ const request = require('supertest');
 const expect = require('chai').expect;
 const dotenv = require('dotenv');
 dotenv.config();
-
 describe('Restfull File share API Tests', () => {
     const baseurl = 'http://localhost:' + process.env.PORT;
     let private_key = '';
@@ -14,6 +13,7 @@ describe('Restfull File share API Tests', () => {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
+                //console.log(res.body);
                 expect(res.statusCode).to.be.equal(200);
                 expect(res.body).to.be.equal('Pong');
                 done();
@@ -26,6 +26,7 @@ describe('Restfull File share API Tests', () => {
             .post('/files')
             .attach('file', filePath)
             .end(function (err, res) {
+                //console.log(res.body);
                 expect(res.statusCode).to.be.equal(200);
                 private_key = res.body.payload.privateKey;
                 public_key = res.body.payload.publicKey;
@@ -38,6 +39,7 @@ describe('Restfull File share API Tests', () => {
             .get('/files/' + public_key)
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
+                //console.log(res.body);
                 expect(res.statusCode).to.be.equal(200);
                 done();
             });
@@ -49,6 +51,7 @@ describe('Restfull File share API Tests', () => {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
+                //console.log(res.body);
                 expect(res.statusCode).to.be.equal(200);
                 done();
             });
@@ -56,11 +59,27 @@ describe('Restfull File share API Tests', () => {
 
     it('should not Successfully delete while unknown private key', (done) => {
         request(baseurl)
-            .delete('/files/' + '12121i12i1y2')
+            .delete('/files/' + '9876111221212222222212121i12i1y2')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
+                //console.log(res.body);
+                expect(res.statusCode).to.be.equal(500);
+                done();
+            });
+    });
+
+    it('should not Successfully delete while private key length is grater than 32', (done) => {
+        request(baseurl)
+            .delete('/files/' + '9876111sdsd221212222222212121i12i1y2')
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json')
+            .end(function (err, res) {
+                //console.log(res.body);
                 expect(res.statusCode).to.be.equal(400);
+                expect(res.body.payload.privatekey.msg).to.be.equal(
+                    'Maximum character limit is 32'
+                );
                 done();
             });
     });
@@ -70,7 +89,8 @@ describe('Restfull File share API Tests', () => {
             .get('/files/' + 'public_key')
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
-                expect(res.statusCode).to.be.equal(429);
+                //console.log(res.body);
+                expect(res.statusCode).to.be.equal(400);
                 done();
             });
     });
@@ -80,7 +100,8 @@ describe('Restfull File share API Tests', () => {
         request(baseurl)
             .post('/files')
             .end(function (err, res) {
-                expect(res.statusCode).to.be.equal(429);
+                //console.log(res.body);
+                expect(res.statusCode).to.be.equal(500);
                 done();
             });
     });

@@ -27,25 +27,23 @@ cp config.env .env
 
 #### Step 3:
 
-Install the required dependencies:
+Run container with required dependencies:
 
 ```bash
-npm install
-```
-
-#### Step 4:
-
-Start the API server using Docker:
-
-```bash
-npm run start
+make up
 ```
 
 Application will be started and available at http://localhost:3000/api/ping
 
-#### Step 5:
+#### Step 4:
 
 To run unit tests, execute the following command:
+
+```bash
+docker-compose exec upload-service sh
+```
+
+then run
 
 ```bash
 npm run test
@@ -143,7 +141,7 @@ npm run test
 
 ### 1. `postman`
 
-- This directory typically contains documentation related to the Postman Collection
+-   This directory typically contains Postman Collection
 
 ## API Specification
 
