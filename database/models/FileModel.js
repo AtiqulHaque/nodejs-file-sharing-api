@@ -1,147 +1,33 @@
-/* module dependencies */
-const fs = require('fs');
-const DB = require('../../settings/db');
-const path = require('path');
-const fileHandler = fs.promises;
-
-const dataPath = __basedir + '/' + DB.host + '/' + DB.name;
-
-const dir = path.resolve(path.join(__basedir, '/' + DB.host));
-
-const file = path.resolve(path.join(__basedir, '/' + DB.host + '/' + DB.name));
-
-(() => {
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+const mongoose = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate-v2');
+const FileSchema = new mongoose.Schema({
+    private_key: {
+        type: String,
+        unique: true,
+        trim: true,
+        required: [true, "Please fill your private name"],
+    }, public_key: {
+        type: String,
+        unique: true,
+        required: [true, "Please fill your public key name"],
+    }, file_name: {
+        type: String
+    }, file_mimetype: {
+        type: String,
+        required: [true, "Please fill png_image"],
+    },
+    last_excess : {
+        type: Date, 
+        default: Date.now
     }
+}, {
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'},
+    versionKey: false
+});
 
-    if (!fs.existsSync(file)) {
-        let content = '[]';
-        try {
-            fs.writeFileSync(file, content);
-            // file written successfully
-        } catch (err) {
-            console.error(err);
-        }
-    }
-})();
 
-class FileModel {
-    constructor() {
-        this._db = dataPath;
-    }
+FileSchema.plugin(mongoosePaginate);
 
-    /**
-     * read the database and returns a JSON object
-     * @returns {Array}
-     */
-    read = async () => {
-        try {
-            const data = await fileHandler.readFile(this._db, 'utf-8');
-            return JSON.parse(data.toString());
-        } catch (error) {
-            throw error;
-        }
-    };
+const File = mongoose.model("File", FileSchema, "files");
 
-    /**
-     * performs write operations on the database
-     * @param {Object} info
-     */
-    create = async (info) => {
-        try {
-            const data = (await this.read()) || [];
-            data.push(info);
-            await fileHandler.writeFile(this._db, JSON.stringify(data));
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    /**
-     * queries the JSON database to find specified JSON object
-     * @param {string} key
-     * @returns {Object}
-     */
-    find = async (key) => {
-        try {
-            const data = await this.read();
-
-            if (data.length) {
-                const byPrivateKey = data.find((element) => element.private_key === key);
-                const byPublicKey = data.find((element) => element.public_key === key);
-                if (byPrivateKey) {
-                    return [byPrivateKey];
-                } else if (byPublicKey) {
-                    return [byPublicKey];
-                } else {
-                    return [];
-                }
-            } else {
-                return [];
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    /**
-     *
-     * performs rewrite of JSON objects on the database
-     * @param {string} key
-     * @param {Object} info
-     */
-    update = async (key, info) => {
-        try {
-            const { data } = await this.find(key);
-            await this.delete(data.private_key);
-            await this.create(info);
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    /**
-     *
-     * performs rewrite of JSON objects on the database
-     * @param {string} key
-     * @param {Object} info
-     */
-    updateActivity = async (key, datetime) => {
-        try {
-            let data = await this.find(key);
-            //console.log(data);
-            data[0]['uploaded_at'] = datetime;
-            await this.delete(data[0].private_key);
-            await this.create(data[0]);
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    /**
-     *
-     * deletes specified JSON object from the database
-     * @param {string} privateKey
-     */
-    delete = async (privateKey) => {
-        try {
-            const data = await this.read();
-            if (data.length) {
-                const newData = data.filter((element) => element.private_key != privateKey);
-
-                if (!newData) {
-                    throw new Error('No data found by this private key.');
-                }
-
-                await fileHandler.writeFile(this._db, JSON.stringify(newData));
-            } else {
-                throw new Error('No data in database');
-            }
-        } catch (error) {
-            throw error;
-        }
-    };
-}
-
-module.exports = FileModel;
+module.exports = File;

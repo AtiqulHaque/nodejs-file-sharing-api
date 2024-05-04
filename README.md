@@ -143,7 +143,7 @@ npm run test
 
 ### 1. `postman`
 
--   This directory typically contains documentation related to the Postman Collection
+- This directory typically contains documentation related to the Postman Collection
 
 ## API Specification
 
