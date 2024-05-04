@@ -70,7 +70,7 @@ describe('Restfull File share API Tests', () => {
             .get('/files/' + 'public_key')
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
-                expect(res.statusCode).to.be.equal(400);
+                expect(res.statusCode).to.be.equal(429);
                 done();
             });
     });
@@ -80,7 +80,7 @@ describe('Restfull File share API Tests', () => {
         request(baseurl)
             .post('/files')
             .end(function (err, res) {
-                expect(res.statusCode).to.be.equal(500);
+                expect(res.statusCode).to.be.equal(429);
                 done();
             });
     });

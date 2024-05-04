@@ -4,5 +4,5 @@ initiateConnection();
 global.__basedir = __dirname;
 // Require components
 require("./web")
-//require("./workers")
-//require("./cron")
+require("./workers")
+require("./cron")
