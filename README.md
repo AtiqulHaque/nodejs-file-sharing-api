@@ -1,5 +1,11 @@
 # Simple file sharing API
 
+## System Architecture Diagram
+
+<img src="./system_diagram.png">
+
+---
+
 ## Installation
 
 #### Step 1:
@@ -48,75 +54,91 @@ npm run test
 ## Folder Structure
 
 ```text
-.
-├── README.md                                          // Documentation or project README
-├── config.env                                         // Configuration file
-├── cron                                               // Directory for cron jobs
-│   ├── index.js                                       // Main cron job entry file
-│   ├── jobs                                           // Directory for individual cron jobs
-│   │   ├── ping.js                                    // Cron job for pinging
-│   │   └── storage_cleanup.js                         // Cron job for storage cleanup
-│   ├── jobs.js                                        // File containing cron job configurations
-│   └── utils.js                                       // Utility functions for cron jobs
-├── database                                           // Directory for database-related files
-│   ├── models                                        // Directory for database models
-│   │   └── FileModel.js                              // Model for File entity
-│   └── repositories                                  // Directory for database repositories
-│       └── FileRepository.js                         // Repository for interacting with FileModel
-├── db                                                 // Directory for database files
-│   └── file.json                                     // JSON file containing database data
-├── ecosystem.config.js                 // Configuration file for ecosystem management (e.g., PM2)
-├── index.js                                           // Main entry point of the application
-├── middlewares                                        // Directory for application middlewares
-│   └── rateLimiter.js                                // Middleware for rate limiting
-├── newrelic_agent.log                                // Log file for New Relic agent
-├── package-lock.json                                 // Dependency lock file for npm
-├── package.json                                      // Project metadata and dependencies
-├── services                                          // Directory for application services
-│   ├── FileDeleteService.js                          // Service for deleting files
-│   ├── FileDownloadService.js                        // Service for downloading files
-│   ├── FileUploadService.js                          // Service for uploading files
-│   ├── GeneratekeyService.js                         // Service for generating keys
-│   ├── ImageUpload.js                                // Service for uploading images
-│   └── storage                                       // Directory for storage services
-│       ├── LocalStorageService.js                    // Service for local storage
-│       ├── S3StorageService.js                       // Service for Amazon S3 storage
-│       └── StorageFactory.js                         // Factory for creating storage services
-├── settings                                          // Directory for application settings
-│   ├── app.js                                       // Application settings
-│   ├── db.js                                        // Database settings
-│   └── providers                                    // Directory for external service providers
-│       ├── google.js                                // Google service provider settings
-│       └── s3.js                                    // Amazon S3 service provider settings
-├── test                                              // Directory for tests
-│   ├── index.spec.js                                // Main test file
-│   └── test.png                                     // Test image file
-├── uploads                                           // Directory for uploaded files
-├── utilities                                         // Directory for utility functions
-│   ├── DefaultResponse.js                           // Default response utility
-│   ├── appError.js                                  // Error handling utility
-│   ├── logger.js                                    // Logging utility
-│   ├── math.js                                      // Mathematical utility functions
-│   ├── network.js                                   // Network utility functions
-│   ├── newrelic.js                                  // New Relic utility
-│   ├── redis.js                                     // Redis utility
-│   ├── response.js                                  // Response utility
-│   ├── scoreSettings.json                           // JSON file containing score settings
-│   └── sentry.js                                    // Sentry utility
-└── web                                               // Directory for web-related files
-    ├── controllers                                  // Directory for controllers
-    │   ├── FileProcessController.js                // Controller for file processing
-    │   ├── WelcomeController.js                    // Controller for welcome page
-    │   └── tasks.js                                // Controller for tasks
-    ├── docs                                        // Directory for documentation
-    │   └── docs.js                                 // Documentation file
-    ├── index.js                                    // Web server entry point
-    ├── routers                                     // Directory for routers
-    │   ├── FileProcessRouter.js                    // Router for file processing
-    │   └── tasks.js                                // Router for tasks
-    └── validators                                  // Directory for request validators
-        └── FileDeleteValidators.js                 // Validator for file deletion requests
 
+.
+├── Dockerfile
+├── Makefile
+├── README.md
+├── config.env
+├── cron
+│   ├── index.js
+│   ├── jobs
+│   │   ├── ping.js
+│   │   └── storage_cleanup.js
+│   ├── jobs.js
+│   └── utils.js
+├── database
+│   ├── bootstrap.js
+│   ├── models
+│   │   └── FileModel.js
+│   └── repositories
+│       └── FileRepository.js
+├── db
+│   └── file.json
+├── docker-compose.yml
+├── ecosystem.config.js
+├── index.js
+├── middlewares
+│   └── rateLimiter.js
+├── package-lock.json
+├── package.json
+├── services
+│   ├── FileDeleteService.js
+│   ├── FileDownloadService.js
+│   ├── FileUploadService.js
+│   ├── GeneratekeyService.js
+│   ├── ImageUpload.js
+│   └── storage
+│       ├── LocalStorageService.js
+│       ├── S3StorageService.js
+│       └── StorageFactory.js
+├── settings
+│   ├── app.js
+│   └── providers
+│       ├── google.js
+│       └── s3.js
+├── test
+│   ├── example.test.js
+│   ├── file.test.js
+│   ├── index.spec.js
+│   └── math.test.js
+├── uploads
+├── utilities
+│   ├── CacheHandler.js
+│   ├── DefaultResponse.js
+│   ├── apiFeatures.js
+│   ├── appError.js
+│   ├── base62Encoder.js
+│   ├── bullmq.js
+│   ├── filterText.js
+│   ├── logger.js
+│   ├── math.js
+│   ├── network.js
+│   ├── newrelic.js
+│   ├── redis.js
+│   ├── response.js
+│   ├── scoreSettings.json
+│   └── sentry.js
+├── web
+│   ├── controllers
+│   │   ├── FileProcessController.js
+│   │   ├── WelcomeController.js
+│   │   └── tasks.js
+│   ├── docs
+│   │   └── docs.js
+│   ├── index.js
+│   ├── routers
+│   │   ├── FileProcessRouter.js
+│   │   └── tasks.js
+│   └── validators
+│       └── FileDeleteValidators.js
+└── workers
+    ├── config.js
+    ├── handlers
+    │   ├── cleanup.js
+    │   ├── ping.js
+    │   └── storage_cleanup.js
+    └── index.js
 ```
 
 ### 1. `postman`
