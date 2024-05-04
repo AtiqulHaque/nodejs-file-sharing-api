@@ -54,13 +54,33 @@ describe('Restfull File share API Tests', () => {
             });
     });
 
-    it('should not unccessfully delete while unknown private key', (done) => {
+    it('should not Successfully delete while unknown private key', (done) => {
         request(baseurl)
             .delete('/files/' + '12121i12i1y2')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
             .end(function (err, res) {
-                expect(res.statusCode).to.be.equal(200);
+                expect(res.statusCode).to.be.equal(400);
+                done();
+            });
+    });
+
+    it('should not successfully download file with unknown key', (done) => {
+        request(baseurl)
+            .get('/files/' + 'public_key')
+            .set('Content-Type', 'application/json')
+            .end(function (err, res) {
+                expect(res.statusCode).to.be.equal(400);
+                done();
+            });
+    });
+
+    it('should not successfully upload file without any file', (done) => {
+        const filePath = `${__dirname}/test.png`;
+        request(baseurl)
+            .post('/files')
+            .end(function (err, res) {
+                expect(res.statusCode).to.be.equal(500);
                 done();
             });
     });
