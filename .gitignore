@@ -111,3 +111,5 @@ pgdata/
 .idea
 
 uploads/
+
+db/*
