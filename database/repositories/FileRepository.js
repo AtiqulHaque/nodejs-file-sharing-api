@@ -189,7 +189,8 @@ class FileRepository {
     /**
      * @async
      * @function getAllInActiveFiles
-     * @description Retrieves all files from the repository that have not been accessed for a certain duration
+     * @description Retrieves all files from the repository
+     * that have not been accessed for a certain duration
      * @date 04/05/2024
      * @returns {*} - A status and data object containing the retrieved files or an empty array if none found
      */

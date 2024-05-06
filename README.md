@@ -1,4 +1,4 @@
-# Simple file sharing API
+# Scalable file sharing API service
 
 ## System Architecture Diagram
 
@@ -46,7 +46,7 @@ docker-compose exec upload-service sh
 then run
 
 ```bash
-npm run test
+npm test
 ```
 
 ## Folder Structure
