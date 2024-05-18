@@ -41,6 +41,7 @@ class StorageFactory {
      * @memberof StorageFactory
      */
     static getStorageObject() {
+        console.log(app_settings.storage);
         // Check the configured storage type in application settings
         if (app_settings.storage === 'S3') {
             // If S3 storage is configured, check if the S3 storage service implements the storage interface

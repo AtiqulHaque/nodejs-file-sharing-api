@@ -1,61 +1,61 @@
 services:
-  upload-service:
-    build:
-      context: .
-      dockerfile: Dockerfile   
-    restart: 'no'
-    env_file:
-      - ./.env
-    ports:
-      - 3000:3000
-    depends_on:
-      mongo:
-        condition: service_healthy
-    volumes:
-      - '.:/app'
-      - /app/node_modules
-    command: [ 'npm', 'start' ]
+    upload-service:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: 'no'
+        env_file:
+            - ./.env
+        ports:
+            - 3000:3000
+        depends_on:
+            mongo:
+                condition: service_healthy
+        volumes:
+            - '.:/app'
+            - /app/node_modules
+            - /.env
+        command: ['npm', 'start']
 
+    mongo:
+        image: mongo:4.4
+        restart: 'no'
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: devel
+            MONGO_INITDB_ROOT_PASSWORD: devel
+        healthcheck:
+            test: echo 'db.runCommand({serverStatus:1}).ok' | mongo -u devel -p devel --quiet
+            interval: 10s
+            timeout: 10s
+            retries: 60
+            start_period: 20s
+        ports:
+            - 27017
+        volumes:
+            - mongo_data:/data/db
 
-  mongo:
-    image: mongo:4.4
-    restart: 'no'
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: devel
-      MONGO_INITDB_ROOT_PASSWORD: devel
-    healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo -u devel -p devel --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 60
-      start_period: 20s
-    ports:
-      - 27017
-    volumes:
-      - mongo_data:/data/db
+    cache:
+        image: redis:6.2-alpine
+        restart: always
+        ports:
+            - '6379:6379'
+        volumes:
+            - redis_data:/data
 
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis_data:/data
-
-  mongo-express:
-    image: mongo-express
-    restart: 'no'
-    ports:
-      - 27080:8081
-    depends_on:
-      mongo:
-        condition: service_healthy
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: devel
-      ME_CONFIG_MONGODB_ADMINPASSWORD: devel
-      ME_CONFIG_MONGODB_URL: mongodb://devel:devel@mongo:27017/
-      ME_CONFIG_BASICAUTH: "false"
+    mongo-express:
+        image: mongo-express
+        restart: 'no'
+        ports:
+            - 27080:8081
+        depends_on:
+            mongo:
+                condition: service_healthy
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: devel
+            ME_CONFIG_MONGODB_ADMINPASSWORD: devel
+            ME_CONFIG_MONGODB_URL: mongodb://devel:devel@mongo:27017/
+            ME_CONFIG_BASICAUTH: 'false'
 
 volumes:
-  mongo_data:
-  redis_data:
+    mongo_data:
+    redis_data:
