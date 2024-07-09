@@ -15,7 +15,7 @@ dotenv.config();
 async function addFile(req, res, next) {
     try {
         let FileDeleteServiceObj = new FileUploadService();
-        let { status, data } = await FileDeleteServiceObj.uploadFile(req);
+        let { status, data } = FileDeleteServiceObj.uploadFile(req);
 
         if (status === 'success') {
             res.json(Response.success(data));
